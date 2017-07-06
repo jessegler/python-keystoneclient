@@ -44,6 +44,7 @@ from keystoneclient.v3 import roles
 from keystoneclient.v3 import services
 from keystoneclient.v3 import tokens
 from keystoneclient.v3 import users
+from keystoneclient.v3 import project_tags
 
 
 _logger = logging.getLogger(__name__)
@@ -239,6 +240,7 @@ class Client(httpclient.HTTPClient):
         self.tokens = tokens.TokenManager(self._adapter)
         self.trusts = trusts.TrustManager(self._adapter)
         self.users = users.UserManager(self._adapter)
+        self.project_tags = project_tags.ProjectTagManager(self._adapter)
 
         # DEPRECATED: if session is passed then we go to the new behaviour of
         # authenticating on the first required call.
