@@ -20,6 +20,8 @@ from keystoneclient import base
 from keystoneclient import exceptions
 from keystoneclient.i18n import _
 
+from six.moves import urllib
+
 
 class Project(base.Resource):
     """Represents an Identity project.
@@ -54,6 +56,24 @@ class Project(base.Resource):
             retval = None
 
         return retval
+
+    def add_tag(self, tag):
+        self.manager.add_tag(self.id, tag)
+
+    def update_tags(self, tags):
+        return self.manager.update_tags(self.id, tags)
+
+    def delete_tag(self, tag):
+        self.manager.delete_tag(self.id, tag)
+
+    def delete_all_tags(self):
+        return self.manager.update_tags(self.id, [])
+
+    def list_tags(self):
+        return self.manager.list_tags(self.id)
+
+    def check_tag(self, tag):
+        return self.manager.check_tag(self.id, tag)
 
 
 class ProjectManager(base.CrudManager):
@@ -220,3 +240,33 @@ class ProjectManager(base.CrudManager):
         """
         return super(ProjectManager, self).delete(
             project_id=base.getid(project))
+
+    def add_tag(self, project_id, tag):
+        url = "/projects/%s/tags/%s" % (project_id, urllib.parse.quote(tag))
+        self.client.put(url)
+
+    def update_tags(self, project_id, tags):
+        url = "/projects/%s/tags" % project_id
+        for tag in tags:
+            tag = urllib.parse.quote(tag)
+        resp, body = self.client.put(url, body={"tags": tags})
+        return body['tags']
+
+    def delete_tag(self, project_id, tag):
+        self._delete(
+            "/projects/%s/tags/%s" % (project_id, urllib.parse.quote(tag)))
+
+    def list_tags(self, project_id):
+        url = "/projects/%s/tags" % project_id
+        resp, body = self.client.get(url)
+        return body['tags']
+
+    def check_tag(self, project_id, tag):
+        url = "/projects/%s/tags/%s" % (project_id, urllib.parse.quote(tag))
+        try:
+            resp, body = self.client.head(url)
+            # no errors means found the tag
+            return True
+        except exceptions.NotFound:
+            # 404 means tag not in project
+            return False

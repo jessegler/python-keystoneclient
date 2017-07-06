@@ -312,3 +312,100 @@ class ProjectTests(utils.ClientTestCase, utils.CrudTests):
         # server, a different implementation might not fail this request.
         self.assertRaises(ksa_exceptions.Forbidden, self.manager.update,
                           ref['id'], **utils.parameterize(req_ref))
+
+    def test_add_tag(self):
+        ref = self.new_ref()
+        tag_name = "blue"
+
+        self.stub_url("PUT",
+            parts=[self.collection_key, ref['id'], "tags", tag_name],
+            status_code=201)
+        self.manager.add_tag(ref['id'], tag_name)
+
+
+    def test_update_tags(self):
+        new_tags = ["blue", "orange"]
+        ref = self.new_ref()
+
+        self.stub_url("PUT",
+                      parts=[self.collection_key, ref['id'], "tags"],
+                      json={"tags": new_tags},
+                      status_code=200)
+
+        self.manager.update_tags(ref['id'], new_tags)
+
+    def test_delete_tag(self):
+        ref = self.new_ref()
+        tag_name = "blue"
+
+        self.stub_url("DELETE",
+                      parts=[self.collection_key, ref['id'], "tags", tag_name],
+                      status_code=204)
+
+        self.manager.delete_tag(ref['id'], tag_name)
+
+    def test_delete_all_tags(self):
+        ref = self.new_ref()
+
+        self.stub_url("PUT",
+                      parts=[self.collection_key, ref['id'], "tags"],
+                      json={"tags": []},
+                      status_code=200)
+
+        self.manager.update_tags(ref['id'], [])
+
+    def test_list_tags(self):
+        ref = self.new_ref()
+
+        self.stub_url("GET",
+                      parts=[self.collection_key, ref['id'], "tags"],
+                      json={"tags": ["blue", "orange", "green"]},
+                      status_code=200)
+
+        self.manager.list_tags(ref['id'])
+
+    def test_check_tag(self):
+        ref = self.new_ref()
+        tag_name = "blue"
+
+        self.stub_url("HEAD",
+                      parts=[self.collection_key, ref['id'], "tags", tag_name],
+                      status_code=204)
+
+        self.manager.check_tag(ref['id'], tag_name)
+
+    def test_list_project_tags_filtered(self):
+        filter_tags = 'blue,orange'
+        ref = self.new_ref()
+
+        base_url = self.TEST_URL + '/project?tags=%s' % filter_tags
+        url = self.stub_url('GET',
+                      base_url=base_url)
+        self.manager.list()
+
+    def test_list_project_tags_any_filtered(self):
+        filter_tags = 'blue,orange'
+        ref = self.new_ref()
+
+        base_url = self.TEST_URL + '/project?tags-any=%s' % filter_tags
+        url = self.stub_url('GET',
+                      base_url=base_url)
+        self.manager.list()
+
+    def test_list_project_not_tags_filtered(self):
+        filter_tags = 'blue,orange'
+        ref = self.new_ref()
+
+        base_url = self.TEST_URL + '/project?not-tags=%s' % filter_tags
+        url = self.stub_url('GET',
+                      base_url=base_url)
+        self.manager.list()
+
+    def test_list_project_not_tags_any_filtered(self):
+        filter_tags = 'blue,orange'
+        ref = self.new_ref()
+
+        base_url = self.TEST_URL + '/project?not-tags-any=%s' % filter_tags
+        url = self.stub_url('GET',
+                      base_url=base_url)
+        self.manager.list()

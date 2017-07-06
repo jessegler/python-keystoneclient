@@ -300,6 +300,7 @@ class CrudTests(object):
 
         qs_args = self.requests_mock.last_request.qs
         qs_args_expected = expected_query or filter_kwargs
+
         for key, value in qs_args_expected.items():
             self.assertIn(key, qs_args)
             # The querystring value is a list. Note we convert the value to a
