@@ -54,26 +54,23 @@ class ProjectTagsTests(utils.ClientTestCase, utils.CrudTests):
         ref = self.new_ref()
         request = {'tag': {'project_id': ref['project_id'], 'tag_id': ref['tag_id']}}
         body = {'tag' : {'tag_id' : ref['tag_id']}}
-        url = self.stub_url('DELETE',
-                       base_url=self.TEST_URL+'/projects/%s' % ref['project_id'],
-                       parts=[self.collection_key, ref['tag_id']],
-                       json=body,
-                       status_code=200)
+        self.stub_url('DELETE',
+                      base_url=self.TEST_URL+'/projects/%s' % ref['project_id'],
+                      parts=[self.collection_key, ref['tag_id']],
+                      json=body,
+                      status_code=200)
 
         self.manager.delete(project_id=ref['project_id'], tag_id=ref['tag_id'])
 
     def test_update_tag(self):
-        project_id = uuid.uuid4().hex
         ref = self.new_ref()
-        body = {"tag" : {"tag_id" : ref['tag_id']}}
-        url = self.stub_url('PATCH',
-                      #['projects', project_id, self.collection_key, ref['tag_id']],
-                      #base_url='/projects/%s/tags/%s' % (ref['project_id'], ref['tag_id']),
-                      base_url=self.TEST_URL+'/projects/%s' % 'jess',
-                      parts=['tags', ref['tag_id']],
+        request = {'tag': {'project_id': ref['project_id'], 'name': ref['name']}}
+        body = {'tag' : {'tag_id' : ref['tag_id']}}
+        self.stub_url('PATCH',
+                      base_url=self.TEST_URL+'/projects/%s' % ref['project_id'],
+                      parts=[self.collection_key, ref['tag_id']],
                       json=body,
-                      status_code=204)
-        #self.assertTrue(False, msg= url)
-        #self.assertRequestBodyIs <-- do this
-        self.manager.update(project_id='jess', tag_id=ref['tag_id'],
-                            name=ref['name'])
+                      status_code=200)
+
+        self.manager.update(project_id=ref['project_id'], tag_id=ref['tag_id'], name=ref['name'])
+        self.assertRequestBodyIs(json=request)
