@@ -40,10 +40,9 @@ class ProjectTagManager(base.CrudManager):
     key = 'tag'
 
     @positional(enforcement=positional.WARN)
-    def create(self, tag_id, project_id=None, name=None, **kwargs):
+    def create(self, project_id, name=None, **kwargs):
         """Create a project tag."""
         return super(ProjectTagManager, self).create(
-            tag_id=tag_id,
             project_id=project_id,
             name=name,
             base_url = '/projects/%s' % project_id,
@@ -68,11 +67,13 @@ class ProjectTagManager(base.CrudManager):
             base_url=base_url,
             user_id=base.getid(project))
 
-    def update(self, project_tag, project_id=None, name=None, **kwargs):
+    def update(self, project_id, tag_id, name=None, **kwargs):
+        base_url = '/projects/%s' % project_id
         return super(ProjectTagManager, self).update(
             tag_id=tag_id,
             project_id=project_id,
             name=name,
+            base_url=base_url,
             **kwargs)
 
     def modify_list(self, project, project_tags):
@@ -84,12 +85,12 @@ class ProjectTagManager(base.CrudManager):
                 project_id=project_tag.project_id,
                 name=project_tag.name)
 
-    def delete(self, project_tag, project=None):
+    def delete(self, project_id, tag_id):
         """Delete a project tag from a project."""
-        base_url = '/projects/%s' % 'jess'
         return super(ProjectTagManager, self).delete(
-            base_url=base_url,
-            user_id=base.getid(project_tag))
+            project_id=project_id, 
+            tag_id=tag_id,
+            base_url='/projects/%s' % project_id)
 
     def delete_all_tags(self, project):
         """Delete all project tags from a project."""

@@ -32,16 +32,41 @@ class ProjectTagsTests(utils.ClientTestCase, utils.CrudTests):
 
     def new_ref(self, **kwargs):
         kwargs = super(ProjectTagsTests, self).new_ref(**kwargs)
-        kwargs.setdefault('tag_id', uuid.uuid4().hex)
         kwargs.setdefault('project_id', uuid.uuid4().hex)
+        kwargs.setdefault('tag_id', uuid.uuid4().hex)
         kwargs.setdefault('name', uuid.uuid4().hex)
         return kwargs
 
-    def test_create(self):
+    def test_create_tag(self):
+        ref = self.new_ref()
+        request = {'tag': {'project_id': ref['project_id'], 'name': ref['name']}}
+        body = {'tag' : {'tag_id' : ref['tag_id']}}
+        self.stub_url('POST',
+                       base_url=self.TEST_URL+'/projects/%s' % ref['project_id'],
+                       parts=[self.collection_key],
+                       json=body,
+                       status_code=204)
+
+        self.manager.create(project_id=ref['project_id'], name=ref['name'])
+        self.assertRequestBodyIs(json=request)
+
+    def test_delete_tag(self):
+        ref = self.new_ref()
+        request = {'tag': {'project_id': ref['project_id'], 'tag_id': ref['tag_id']}}
+        body = {'tag' : {'tag_id' : ref['tag_id']}}
+        url = self.stub_url('DELETE',
+                       base_url=self.TEST_URL+'/projects/%s' % ref['project_id'],
+                       parts=[self.collection_key, ref['tag_id']],
+                       json=body,
+                       status_code=200)
+
+        self.manager.delete(project_id=ref['project_id'], tag_id=ref['tag_id'])
+
+    def test_update_tag(self):
         project_id = uuid.uuid4().hex
         ref = self.new_ref()
         body = {"tag" : {"tag_id" : ref['tag_id']}}
-        url = self.stub_url('POST',
+        url = self.stub_url('PATCH',
                       #['projects', project_id, self.collection_key, ref['tag_id']],
                       #base_url='/projects/%s/tags/%s' % (ref['project_id'], ref['tag_id']),
                       base_url=self.TEST_URL+'/projects/%s' % 'jess',
@@ -50,9 +75,5 @@ class ProjectTagsTests(utils.ClientTestCase, utils.CrudTests):
                       status_code=204)
         #self.assertTrue(False, msg= url)
         #self.assertRequestBodyIs <-- do this
-        self.manager.create(tag_id=ref['tag_id'], project_id='jess',
+        self.manager.update(project_id='jess', tag_id=ref['tag_id'],
                             name=ref['name'])
-        self.assertRaises(exceptions.ValidationError,
-                          self.manager.delete,
-                          project_tag=ref,
-                          project=None)
