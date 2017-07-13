@@ -68,13 +68,13 @@ class ProjectTagManager(base.CrudManager):
             user_id=base.getid(project))
 
     def update(self, project_id, tag_id, name=None, **kwargs):
-        base_url = '/projects/%s' % project_id
         return super(ProjectTagManager, self).update(
             # TODO remove tag_id, mandatory name
             tag_id=base.getid(project_tag),
             project_id=project_id,
+            tag_id=tag_id,
             name=name,
-            base_url=base_url,
+            base_url = '/projects/%s' % project_id,
             **kwargs)
 
     def modify_list(self, project, project_tags):

@@ -77,14 +77,16 @@ class ProjectTagsTests(utils.ClientTestCase, utils.CrudTests):
 
     def test_update_tag(self):
         ref = self.new_ref()
-        body = {"tag": {"tag_id": ref['tag_id']}}
+        request = {'tag': {'project_id': ref['project_id'], 'name': ref['name']}}
+        body = {'tag' : {'tag_id' : ref['tag_id']}}
         self.stub_url('PATCH',
-                      base_url=self.TEST_URL + '/projects/%s' % 'jess',
-                      parts=['tags', ref['tag_id']],
+                      base_url=self.TEST_URL+'/projects/%s' % ref['project_id'],
+                      parts=[self.collection_key, ref['tag_id']],
                       json=body,
-                      status_code=204)
-        self.manager.update(project_id='jess', tag_id=ref['tag_id'],
-                            name=ref['name'])
+                      status_code=200)
+
+        self.manager.update(project_id=ref['project_id'], tag_id=ref['tag_id'], name=ref['name'])
+        self.assertRequestBodyIs(json=request)
 
     def test_list(self):
         ref = self.new_ref()
