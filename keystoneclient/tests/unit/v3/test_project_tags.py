@@ -16,6 +16,7 @@
 import mock
 import uuid
 
+import logging
 from keystoneclient import exceptions
 from keystoneclient.tests.unit.v3 import utils
 from keystoneclient.v3 import project_tags
@@ -25,25 +26,32 @@ class ProjectTagsTests(utils.ClientTestCase, utils.CrudTests):
     def setUp(self):
         super(ProjectTagsTests, self).setUp()
         self.key = 'project_tag'
-        self.collection_key = 'project_tags'
+        self.collection_key = 'tags'
         self.model = project_tags.ProjectTag
         self.manager = self.client.project_tags
 
     def new_ref(self, **kwargs):
         kwargs = super(ProjectTagsTests, self).new_ref(**kwargs)
-        kwargs.setdefault('id', uuid.uuid4().hex)
+        kwargs.setdefault('tag_id', uuid.uuid4().hex)
         kwargs.setdefault('project_id', uuid.uuid4().hex)
         kwargs.setdefault('name', uuid.uuid4().hex)
         return kwargs
 
-    def test_create_tag_on_project(self):
+    def test_create(self):
         project_id = uuid.uuid4().hex
         ref = self.new_ref()
-        self.stub_url('PUT',
-                      ['projects', project_id, self.collection_key, ref['id']],
+        body = {"tag" : {"tag_id" : ref['tag_id']}}
+        url = self.stub_url('POST',
+                      #['projects', project_id, self.collection_key, ref['tag_id']],
+                      #base_url='/projects/%s/tags/%s' % (ref['project_id'], ref['tag_id']),
+                      base_url=self.TEST_URL+'/projects/%s' % 'jess',
+                      parts=['tags', ref['tag_id']],
+                      json=body,
                       status_code=204)
-
-        self.manager.create(id=ref['id'], project_id=ref['project_id'], name=ref['name'])
+        #self.assertTrue(False, msg= url)
+        #self.assertRequestBodyIs <-- do this
+        self.manager.create(tag_id=ref['tag_id'], project_id='jess',
+                            name=ref['name'])
         self.assertRaises(exceptions.ValidationError,
                           self.manager.delete,
                           project_tag=ref,

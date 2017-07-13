@@ -23,7 +23,7 @@ class ProjectTag(base.Resource):
     """Represents an Identity project.
 
     Attributes:
-        * id: a uuid that identifies the project
+        * tag_id: a uuid that identifies the tag
         * project_id: a uuid of the project the tag is attached to
         * name: project tag name
 
@@ -36,16 +36,17 @@ class ProjectTagManager(base.CrudManager):
     """Manager class for manipulating Identity projects."""
 
     resource_class = ProjectTag
-    collection_key = 'project_tags'
-    key = 'project_tag'
+    collection_key = 'tags'
+    key = 'tag'
 
     @positional(enforcement=positional.WARN)
-    def create(self, id, project_id=None, name=None, **kwargs):
+    def create(self, tag_id, project_id=None, name=None, **kwargs):
         """Create a project tag."""
         return super(ProjectTagManager, self).create(
-            id=id,
+            tag_id=tag_id,
             project_id=project_id,
             name=name,
+            base_url = '/projects/%s' % project_id,
             **kwargs)
 
     @positional(enforcement=positional.WARN)
@@ -69,7 +70,7 @@ class ProjectTagManager(base.CrudManager):
 
     def update(self, project_tag, project_id=None, name=None, **kwargs):
         return super(ProjectTagManager, self).update(
-            id=id,
+            tag_id=tag_id,
             project_id=project_id,
             name=name,
             **kwargs)
@@ -79,13 +80,15 @@ class ProjectTagManager(base.CrudManager):
         self.delete_all_tags(project)
         for project_tag in project_tags:
             self.create(
-                id=project_tag.id,
+                tag_id=project_tag.tag_id,
                 project_id=project_tag.project_id,
                 name=project_tag.name)
 
     def delete(self, project_tag, project=None):
         """Delete a project tag from a project."""
+        base_url = '/projects/%s' % 'jess'
         return super(ProjectTagManager, self).delete(
+            base_url=base_url,
             user_id=base.getid(project_tag))
 
     def delete_all_tags(self, project):

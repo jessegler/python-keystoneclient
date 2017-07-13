@@ -37,6 +37,7 @@ from keystoneclient.v3 import endpoint_groups
 from keystoneclient.v3 import endpoints
 from keystoneclient.v3 import groups
 from keystoneclient.v3 import policies
+from keystoneclient.v3 import project_tags
 from keystoneclient.v3 import projects
 from keystoneclient.v3 import regions
 from keystoneclient.v3 import role_assignments
@@ -44,7 +45,6 @@ from keystoneclient.v3 import roles
 from keystoneclient.v3 import services
 from keystoneclient.v3 import tokens
 from keystoneclient.v3 import users
-from keystoneclient.v3 import project_tags
 
 
 _logger = logging.getLogger(__name__)
