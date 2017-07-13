@@ -20,6 +20,7 @@ import logging
 from keystoneclient import exceptions
 from keystoneclient.tests.unit.v3 import utils
 from keystoneclient.v3 import project_tags
+from keystoneclient.v3 import projects
 
 
 class ProjectTagsTests(utils.ClientTestCase, utils.CrudTests):
@@ -37,15 +38,25 @@ class ProjectTagsTests(utils.ClientTestCase, utils.CrudTests):
         kwargs.setdefault('name', uuid.uuid4().hex)
         return kwargs
 
+    def _tag_create(self, project_id=None, name=None):
+        project_tag = project_tags.ProjectTag
+        if project_id is None:
+            project_id = uuid.uuid4().hex
+        if name is None:
+            name = uuid.uuid4().hex
+        project_tag.project_id = project_id
+        project_tag.name = name
+        return project_tag
+
     def test_create_tag(self):
         ref = self.new_ref()
         request = {'tag': {'project_id': ref['project_id'], 'name': ref['name']}}
-        body = {'tag' : {'tag_id' : ref['tag_id']}}
+        body = {'tag': {'tag_id': ref['tag_id']}}
         self.stub_url('POST',
-                       base_url=self.TEST_URL+'/projects/%s' % ref['project_id'],
-                       parts=[self.collection_key],
-                       json=body,
-                       status_code=204)
+                      base_url=self.TEST_URL+'/projects/%s' % ref['project_id'],
+                      parts=[self.collection_key],
+                      json=body,
+                      status_code=204)
 
         self.manager.create(project_id=ref['project_id'], name=ref['name'])
         self.assertRequestBodyIs(json=request)
@@ -53,27 +64,38 @@ class ProjectTagsTests(utils.ClientTestCase, utils.CrudTests):
     def test_delete_tag(self):
         ref = self.new_ref()
         request = {'tag': {'project_id': ref['project_id'], 'tag_id': ref['tag_id']}}
-        body = {'tag' : {'tag_id' : ref['tag_id']}}
-        url = self.stub_url('DELETE',
-                       base_url=self.TEST_URL+'/projects/%s' % ref['project_id'],
-                       parts=[self.collection_key, ref['tag_id']],
-                       json=body,
-                       status_code=200)
+        body = {'tag': {'tag_id': ref['tag_id']}}
+        self.stub_url('DELETE',
+                      base_url=self.TEST_URL + '/projects/%s' % ref['project_id'],
+                      parts=[self.collection_key, ref['tag_id']],
+                      # TODO(jess): no body?
+                      json=body,
+                      # TODO(jess): spec says 204
+                      status_code=200)
 
         self.manager.delete(project_id=ref['project_id'], tag_id=ref['tag_id'])
 
     def test_update_tag(self):
-        project_id = uuid.uuid4().hex
         ref = self.new_ref()
-        body = {"tag" : {"tag_id" : ref['tag_id']}}
-        url = self.stub_url('PATCH',
-                      #['projects', project_id, self.collection_key, ref['tag_id']],
-                      #base_url='/projects/%s/tags/%s' % (ref['project_id'], ref['tag_id']),
-                      base_url=self.TEST_URL+'/projects/%s' % 'jess',
+        body = {"tag": {"tag_id": ref['tag_id']}}
+        self.stub_url('PATCH',
+                      base_url=self.TEST_URL + '/projects/%s' % 'jess',
                       parts=['tags', ref['tag_id']],
                       json=body,
                       status_code=204)
-        #self.assertTrue(False, msg= url)
-        #self.assertRequestBodyIs <-- do this
         self.manager.update(project_id='jess', tag_id=ref['tag_id'],
                             name=ref['name'])
+
+    def test_list(self):
+        ref = self.new_ref()
+        project = projects.Project
+        project.id = ref['project_id']
+        body = ['blue', 'red', 'green']
+
+        self.stub_url('GET',
+                      base_url=self.TEST_URL + '/projects/%s' % project.id,
+                      parts=['tags'],
+                      body=body,
+                      status_code=200)
+
+        self.manager.list(project=project)

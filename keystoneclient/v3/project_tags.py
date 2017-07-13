@@ -40,6 +40,7 @@ class ProjectTagManager(base.CrudManager):
     key = 'tag'
 
     @positional(enforcement=positional.WARN)
+    # TODO: Do we want to take a project or a project id here?
     def create(self, project_id, name=None, **kwargs):
         """Create a project tag."""
         return super(ProjectTagManager, self).create(
@@ -49,19 +50,18 @@ class ProjectTagManager(base.CrudManager):
             **kwargs)
 
     @positional(enforcement=positional.WARN)
-    def list(self, project=None, **kwargs):
+    def list(self, project, **kwargs):
         """List project tags."""
-        base_url = '/projects/%s' % base.getid(project) if project else None
+        base_url = '/projects/%s' % base.getid(project)
         return super(ProjectTagManager, self).list(
             base_url=base_url,
             **kwargs)
 
-    def get(self, project_tag):
-        return super(ProjectTagManager, self).get(
-            project_tag_id=base.getid(project_tag))
-
     def check_in_project(self, project, project_tag):
         """Check if the project_tag is a member of the specified project."""
+        #TODO improve doc string returns __ if project tag is in project, otherwise __
+        #TODO needs unit test
+        # TODO do we need this?
         base_url = '/projects/%s' % base.getid(project)
         return super(ProjectTagManager, self).head(
             base_url=base_url,
@@ -70,7 +70,8 @@ class ProjectTagManager(base.CrudManager):
     def update(self, project_id, tag_id, name=None, **kwargs):
         base_url = '/projects/%s' % project_id
         return super(ProjectTagManager, self).update(
-            tag_id=tag_id,
+            # TODO remove tag_id, mandatory name
+            tag_id=base.getid(project_tag),
             project_id=project_id,
             name=name,
             base_url=base_url,
@@ -78,6 +79,7 @@ class ProjectTagManager(base.CrudManager):
 
     def modify_list(self, project, project_tags):
         """Modify project tag list on a project."""
+        #TODO needs unit test
         self.delete_all_tags(project)
         for project_tag in project_tags:
             self.create(
@@ -88,7 +90,7 @@ class ProjectTagManager(base.CrudManager):
     def delete(self, project_id, tag_id):
         """Delete a project tag from a project."""
         return super(ProjectTagManager, self).delete(
-            project_id=project_id, 
+            project_id=project_id,
             tag_id=tag_id,
             base_url='/projects/%s' % project_id)
 
@@ -96,3 +98,5 @@ class ProjectTagManager(base.CrudManager):
         """Delete all project tags from a project."""
         for project_tag in self.list(project):
             self.delete(project, project_tag)
+
+    # TODO needs tag search
