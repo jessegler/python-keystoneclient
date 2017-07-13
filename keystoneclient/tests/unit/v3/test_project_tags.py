@@ -88,16 +88,19 @@ class ProjectTagsTests(utils.ClientTestCase, utils.CrudTests):
         self.manager.update(project_id=ref['project_id'], tag_id=ref['tag_id'], name=ref['name'])
         self.assertRequestBodyIs(json=request)
 
-    def test_list(self):
+    def test_list_tags(self):
         ref = self.new_ref()
         project = projects.Project
         project.id = ref['project_id']
-        body = ['blue', 'red', 'green']
+        # TODO(jess): spec says tags
+        body = {'tag': {'tags': ['blue', 'red', 'green']}}
 
         self.stub_url('GET',
                       base_url=self.TEST_URL + '/projects/%s' % project.id,
                       parts=['tags'],
-                      body=body,
+                      json=body,
                       status_code=200)
 
-        self.manager.list(project=project)
+        ret_val = self.manager.list(project)
+        # self.assertTrue(False, ret_val)
+        # self.assertEquals(body, ret_val)

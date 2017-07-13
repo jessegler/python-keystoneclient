@@ -49,11 +49,11 @@ class ProjectTagManager(base.CrudManager):
             base_url = '/projects/%s' % project_id,
             **kwargs)
 
-    @positional(enforcement=positional.WARN)
+    #@positional(enforcement=positional.WARN)
     def list(self, project, **kwargs):
         """List project tags."""
         base_url = '/projects/%s' % base.getid(project)
-        return super(ProjectTagManager, self).list(
+        return super(ProjectTagManager, self).get(
             base_url=base_url,
             **kwargs)
 
@@ -70,7 +70,6 @@ class ProjectTagManager(base.CrudManager):
     def update(self, project_id, tag_id, name=None, **kwargs):
         return super(ProjectTagManager, self).update(
             # TODO remove tag_id, mandatory name
-            tag_id=base.getid(project_tag),
             project_id=project_id,
             tag_id=tag_id,
             name=name,
