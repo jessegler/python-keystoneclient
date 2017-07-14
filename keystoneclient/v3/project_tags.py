@@ -57,15 +57,16 @@ class ProjectTagManager(base.CrudManager):
             base_url=base_url,
             **kwargs)
 
-    def check_in_project(self, project, project_tag):
+    def check_in_project(self, project_id, tag_id):
         """Check if the project_tag is a member of the specified project."""
         #TODO improve doc string returns __ if project tag is in project, otherwise __
         #TODO needs unit test
         # TODO do we need this?
-        base_url = '/projects/%s' % base.getid(project)
+        base_url = '/projects/%s' % project_id
         return super(ProjectTagManager, self).head(
-            base_url=base_url,
-            user_id=base.getid(project))
+            project_id=project_id,
+            tag_id=tag_id,
+            base_url=base_url)
 
     def update(self, project_id, tag_id, name=None, **kwargs):
         return super(ProjectTagManager, self).update(

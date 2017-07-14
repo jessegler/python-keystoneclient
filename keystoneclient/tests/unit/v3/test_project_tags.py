@@ -104,3 +104,17 @@ class ProjectTagsTests(utils.ClientTestCase, utils.CrudTests):
         ret_val = self.manager.list(project)
         # self.assertTrue(False, ret_val)
         # self.assertEquals(body, ret_val)
+
+    def test_check_in_project(self):
+        ref = self.new_ref()
+        project = projects.Project
+        project.id = ref['project_id']
+        # TODO(jess): spec says tags
+        body = {'tag': {'tags': ['blue', 'red', 'green']}}
+
+        url = self.stub_url('HEAD',
+                      base_url=self.TEST_URL + '/projects/%s' % project.id,
+                      parts=[self.collection_key, ref['tag_id']],
+                      json=body,
+                      status_code=200)
+        self.manager.check_in_project(project.id, ref['tag_id'])
