@@ -23,7 +23,6 @@ class ProjectTag(base.Resource):
     """Represents an Identity project.
 
     Attributes:
-        * tag_id: a uuid that identifies the tag
         * project_id: a uuid of the project the tag is attached to
         * name: project tag name
 
@@ -88,11 +87,11 @@ class ProjectTagManager(base.CrudManager):
                 project_id=project_tag.project_id,
                 name=project_tag.name)
 
-    def delete(self, project_id, tag_id):
+    def delete(self, project_id, name):
         """Delete a project tag from a project."""
         return super(ProjectTagManager, self).delete(
             project_id=project_id,
-            tag_id=tag_id,
+            tag_id=name,
             base_url='/projects/%s' % project_id)
 
     def delete_all_tags(self, project):

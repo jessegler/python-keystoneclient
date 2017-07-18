@@ -60,17 +60,14 @@ class ProjectTagsTests(utils.ClientTestCase, utils.CrudTests):
 
     def test_delete_tag(self):
         ref = self.new_ref()
-        request = {'tag': {'project_id': ref['project_id'], 'tag_id': ref['tag_id']}}
-        body = {'tag': {'tag_id': ref['tag_id']}}
-        self.stub_url('DELETE',
+        request = {'tag': {'project_id': ref['project_id'], 'name': ref['name']}}
+        url = self.stub_url('DELETE',
                       base_url=self.TEST_URL + '/projects/%s' % ref['project_id'],
-                      parts=[self.collection_key, ref['tag_id']],
-                      # TODO(jess): no body?
-                      json=body,
+                      parts=[self.collection_key, ref['name']],
                       # TODO(jess): spec says 204
-                      status_code=200)
+                      status_code=204)
 
-        self.manager.delete(project_id=ref['project_id'], tag_id=ref['tag_id'])
+        self.manager.delete(project_id=ref['project_id'], name=ref['name'])
 
     def test_update_tag(self):
         ref = self.new_ref()
