@@ -48,18 +48,15 @@ class ProjectTagsTests(utils.ClientTestCase, utils.CrudTests):
         project_tag.name = name
         return project_tag
 
-    def test_create_tag(self):
+    def test_create(self):
         ref = self.new_ref()
         request = {'tag': {'project_id': ref['project_id'], 'name': ref['name']}}
-        body = {'tag': {'tag_id': ref['tag_id']}}
-        self.stub_url('POST',
+        self.stub_url('PUT',
                       base_url=self.TEST_URL+'/projects/%s' % ref['project_id'],
                       parts=[self.collection_key],
-                      json=body,
                       status_code=204)
 
-        self.manager.create(project_id=ref['project_id'], name=ref['name'])
-        self.assertRequestBodyIs(json=request)
+        self.manager.create(project=ref['project_id'], name=ref['name'])
 
     def test_delete_tag(self):
         ref = self.new_ref()

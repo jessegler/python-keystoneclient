@@ -41,13 +41,14 @@ class ProjectTagManager(base.CrudManager):
 
     @positional(enforcement=positional.WARN)
     # TODO: Do we want to take a project or a project id here?
-    def create(self, project_id, name=None, **kwargs):
+    def create(self, project, name=None, **kwargs):
         """Create a project tag."""
-        return super(ProjectTagManager, self).create(
-            project_id=project_id,
-            name=name,
-            base_url = '/projects/%s' % project_id,
-            **kwargs)
+        kwargs.update({
+            "project_id": project,
+            "name": name,
+            "base_url": '/projects/%s' % project
+            })
+        return self.put(**kwargs)
 
     #@positional(enforcement=positional.WARN)
     def list(self, project, **kwargs):
