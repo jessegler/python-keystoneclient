@@ -242,3 +242,9 @@ class ProjectManager(base.CrudManager):
 
     def update_tags(self, project, tags):
         return self._update("/projects/%s/tags" % base.getid(project), body=tags)
+
+    def delete_tag(self, project, tag):
+        return self._delete("/projects/%s/tags/%s" % (base.getid(project), tag))
+
+    def list_tags(self, project):
+        return self._list("/projects/%s/tags" % base.getid(project), "tags")
