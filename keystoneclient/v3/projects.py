@@ -19,7 +19,6 @@ from positional import positional
 from keystoneclient import base
 from keystoneclient import exceptions
 from keystoneclient.i18n import _
-from keystoneclient.v3 import project_tags
 
 
 class Project(base.Resource):
@@ -71,7 +70,7 @@ class Project(base.Resource):
     def list_tags(self):
         return self.manager.list_tags(self)
 
-    def check_if_tag_exists(self):
+    def check_if_tag_exists(self, tag):
         return self.manager.check_tag(self, tag)
 
 
@@ -255,7 +254,7 @@ class ProjectManager(base.CrudManager):
 
     def list_tags(self, project):
         return self._list(
-            "/projects/%s/tags" % base.getid(project), 
+            "/projects/%s/tags" % base.getid(project),
             response_key="tags")
 
     def check_tag(self, project, tag):
