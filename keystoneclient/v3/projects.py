@@ -220,3 +220,12 @@ class ProjectManager(base.CrudManager):
         """
         return super(ProjectManager, self).delete(
             project_id=base.getid(project))
+
+    def do_tag_function(self, project, name=None, **kwargs):
+        """Maybe handles add, delete, update, and delete_all?"""
+        kwargs.update({
+            "project_id": project,
+            "name": name,
+            "base_url": '/projects/%s' % project
+            })
+        return self.put(**kwargs)
