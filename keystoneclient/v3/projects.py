@@ -19,7 +19,7 @@ from positional import positional
 from keystoneclient import base
 from keystoneclient import exceptions
 from keystoneclient.i18n import _
-from keystoneclient.v3.project_tags import ProjectTagManager
+from keystoneclient.v3 import project_tags
 
 
 class Project(base.Resource):
@@ -37,10 +37,6 @@ class Project(base.Resource):
                    project in the hierarchy
 
     """
-
-    def __init__(self, manager, info, loaded=False):
-        super().__init__(manager, info, loaded)
-        self.tag_manager = tag_manager.ProjectTagManager()
 
     @positional(enforcement=positional.WARN)
     def update(self, name=None, description=None, enabled=None):
@@ -60,24 +56,20 @@ class Project(base.Resource):
 
         return retval
 
-    def add_tag(self, name, **kwargs):
-        base_url = '/projects/%s' % self.id
-        return self.tag_manager.put(project_id=self.id, tag_id=name, base_url=base_url, **kwargs)
+    def add_tag(self, tag):
+        return self.manager.add_tag(self, tag)
 
-    def update_tags(self, name, **kwargs):
-        base_url = '/projects/%s' % self.id
-        return self.tag_manager.put(project_id=self.id, tag_id=name, base_url=base_url, **kwargs)
+    def update_tags(self, tags):
+        return self.manager.update_tags(self, tags)
 
-    def delete_tag(self, name):
-        base_url = '/projects/%s' % self.id
-        return self.tag_manager.delete(project_id=self.id, tag_id=name, base_url=base_url, **kwargs)
+    def delete_tag(self, tag):
+        return self.manager.delete_tag(self, tag)
 
     def delete_all_tags(self):
-        base_url = '/projects/%s' % self.id
-        return self.manager.update(project_id=self.id, tag_id=[], **kwargs)
+        return self.manager.update_tags(self, [])
 
     def list_tags(self):
-	return self.manager.list(project_id=self.id, tag_id=name)
+        return self.manager.list_tags(self)
 
 
 class ProjectManager(base.CrudManager):
@@ -244,3 +236,7 @@ class ProjectManager(base.CrudManager):
         """
         return super(ProjectManager, self).delete(
             project_id=base.getid(project))
+
+    def add_tag(self, project, tag):
+        return self._update("/project/%s/tag/%s" % (base.getid(project), tag))
+
