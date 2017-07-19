@@ -241,16 +241,23 @@ class ProjectManager(base.CrudManager):
             project_id=base.getid(project))
 
     def add_tag(self, project, tag):
-        return self._update("/projects/%s/tags/%s" % (base.getid(project), response_key="tags"))
+        return self._update(
+            "/projects/%s/tags/%s" % (base.getid(project), tag))
 
     def update_tags(self, project, tags):
-        return self._update("/projects/%s/tags" % base.getid(project), body=tags)
+        return self._update(
+            "/projects/%s/tags" % base.getid(project),
+            body=tags)
 
     def delete_tag(self, project, tag):
-        return self._delete("/projects/%s/tags/%s" % (base.getid(project), tag))
+        return self._delete(
+            "/projects/%s/tags/%s" % (base.getid(project), tag))
 
     def list_tags(self, project):
-        return self._list("/projects/%s/tags" % base.getid(project), "tags")
+        return self._list(
+            "/projects/%s/tags" % base.getid(project), 
+            response_key="tags")
 
     def check_tag(self, project, tag):
-        return self._head("/projects/%s/tags/%s" % (base.getid(project), tag))
+        return self._head(
+            "/projects/%s/tags/%s" % (base.getid(project), tag))
