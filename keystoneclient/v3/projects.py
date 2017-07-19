@@ -55,6 +55,14 @@ class Project(base.Resource):
 
         return retval
 
+    def add_tag(self, tag, **kwargs):
+        base_url = '/projects/%s' % project
+        return self.manager.put(project_id=self.id, name=name, base_url=url, **kwargs)
+
+    def update_tags(self, tag, **kwargs):
+        base_url = '/projects/%s' % project
+        return self.manager.put(project_id=self.id, name=name, base_url=url, **kwargs)
+
 
 class ProjectManager(base.CrudManager):
     """Manager class for manipulating Identity projects."""
@@ -220,12 +228,3 @@ class ProjectManager(base.CrudManager):
         """
         return super(ProjectManager, self).delete(
             project_id=base.getid(project))
-
-    def do_tag_function(self, project, name=None, **kwargs):
-        """Maybe handles add, delete, update, and delete_all?"""
-        kwargs.update({
-            "project_id": project,
-            "name": name,
-            "base_url": '/projects/%s' % project
-            })
-        return self.put(**kwargs)
