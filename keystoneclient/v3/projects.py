@@ -238,5 +238,7 @@ class ProjectManager(base.CrudManager):
             project_id=base.getid(project))
 
     def add_tag(self, project, tag):
-        return self._update("/project/%s/tag/%s" % (base.getid(project), tag))
+        return self._update("/projects/%s/tags/%s" % (base.getid(project), tag))
 
+    def update_tags(self, project, tags):
+        return self._update("/projects/%s/tags" % base.getid(project), body=tags)
