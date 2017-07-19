@@ -56,12 +56,20 @@ class Project(base.Resource):
         return retval
 
     def add_tag(self, tag, **kwargs):
-        base_url = '/projects/%s' % project
-        return self.manager.put(project_id=self.id, name=name, base_url=url, **kwargs)
+        base_url = '/projects/%s' % self.id
+        return self.manager.put(project_id=self.id, tag_id=name, base_url=url, **kwargs)
 
     def update_tags(self, tag, **kwargs):
-        base_url = '/projects/%s' % project
-        return self.manager.put(project_id=self.id, name=name, base_url=url, **kwargs)
+        base_url = '/projects/%s' % self.id
+        return self.manager.put(project_id=self.id, tag_id=name, base_url=url, **kwargs)
+
+    def delete_tag(self, tag):
+        base_url = '/projects/%s' % self.id
+        return self.manager.delete(project_id=self.id, tag_id=name, **kwargs)
+
+    def delete_all_tags(self):
+        base_url = '/projects/%s' % self.id
+        return self.manager.update(project_id=self.id, tag_id=[], **kwargs)
 
 
 class ProjectManager(base.CrudManager):
