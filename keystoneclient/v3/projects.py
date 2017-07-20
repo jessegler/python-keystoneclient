@@ -70,8 +70,8 @@ class Project(base.Resource):
     def list_tags(self):
         return self.manager.list_tags(self.id)
 
-    def check_if_tag_exists(self, tag):
-        return self.manager.check_tag(self, tag)
+    def check_tag(self, tag):
+        return tag in self.tags['tags']
 
 
 class ProjectManager(base.CrudManager):
@@ -256,7 +256,3 @@ class ProjectManager(base.CrudManager):
         url = "/projects/%s/tags" % project_id
         resp, body = self.client.get(url)
         return body['tags']
-
-    def check_tag(self, project, tag):
-        return self._head(
-            "/projects/%s/tags/%s" % (base.getid(project), tag))
