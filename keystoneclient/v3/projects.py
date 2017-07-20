@@ -243,10 +243,10 @@ class ProjectManager(base.CrudManager):
         url = "/projects/%s/tags/%s" % (project_id, tag)
         self.client.put(url)
 
-    def update_tags(self, project, tags):
-        return self._update(
-            "/projects/%s/tags" % base.getid(project),
-            body=tags)
+    def update_tags(self, project_id, tags):
+        url = "/projects/%s/tags" % project_id
+        resp, body = self.client.put(url, body={"tags": tags})
+        return body['tags']
 
     def delete_tag(self, project_id, tag):
         return self._delete(
