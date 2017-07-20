@@ -84,7 +84,7 @@ class ProjectManager(base.CrudManager):
     @positional(3, enforcement=positional.WARN)
     def create(self, name, domain, description=None,
                enabled=True, parent=None, **kwargs):
-        """Create a project.
+        """Create a project.    
 
         :param str name: the name of the project.
         :param domain: the domain of the project.
@@ -253,9 +253,9 @@ class ProjectManager(base.CrudManager):
             "/projects/%s/tags/%s" % (base.getid(project), tag))
 
     def list_tags(self, project):
-        return self._list(
-            "/projects/%s/tags" % base.getid(project),
-            response_key="tags")
+        url = "/projects/%s/tags" % project.id
+        resp, body = self.client.get(url)
+        return body['tags']
 
     def check_tag(self, project, tag):
         return self._head(
