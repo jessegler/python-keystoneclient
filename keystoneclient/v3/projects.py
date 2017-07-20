@@ -56,19 +56,19 @@ class Project(base.Resource):
         return retval
 
     def add_tag(self, tag):
-        return self.manager.add_tag(self, tag)
+        return self.manager.add_tag(self.id, tag)
 
     def update_tags(self, tags):
-        return self.manager.update_tags(self, tags)
+        return self.manager.update_tags(self.id, tags)
 
     def delete_tag(self, tag):
-        return self.manager.delete_tag(self, tag)
+        return self.manager.delete_tag(self.id, tag)
 
     def delete_all_tags(self):
-        return self.manager.update_tags(self, [])
+        return self.manager.update_tags(self.id, [])
 
     def list_tags(self):
-        return self.manager.list_tags(self)
+        return self.manager.list_tags(self.id)
 
     def check_if_tag_exists(self, tag):
         return self.manager.check_tag(self, tag)
@@ -239,21 +239,21 @@ class ProjectManager(base.CrudManager):
         return super(ProjectManager, self).delete(
             project_id=base.getid(project))
 
-    def add_tag(self, project, tag):
-        return self._update(
-            "/projects/%s/tags/%s" % (base.getid(project), tag))
+    def add_tag(self, project_id, tag):
+        url = "/projects/%s/tags/%s" % (project_id, tag)
+        self.client.put(url)
 
     def update_tags(self, project, tags):
         return self._update(
             "/projects/%s/tags" % base.getid(project),
             body=tags)
 
-    def delete_tag(self, project, tag):
+    def delete_tag(self, project_id, tag):
         return self._delete(
-            "/projects/%s/tags/%s" % (base.getid(project), tag))
+            "/projects/%s/tags/%s" % (project_id, tag))
 
-    def list_tags(self, project):
-        url = "/projects/%s/tags" % project.id
+    def list_tags(self, project_id):
+        url = "/projects/%s/tags" % project_id
         resp, body = self.client.get(url)
         return body['tags']
 
