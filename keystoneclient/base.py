@@ -356,7 +356,13 @@ class CrudManager(Manager):
         if params is None:
             return ''
         else:
-            return '?%s' % urllib.parse.urlencode(params, doseq=True)
+            new_params = {}
+            for param in params:
+                if 'tags' in param:
+                    new_params[param.replace('_', '-')] = params[param]
+                else:
+                    new_params[param] = params[param]
+            return '?%s' % urllib.parse.urlencode(new_params, doseq=True)
 
     def build_key_only_query(self, params_list):
         """Build a query that does not include values, just keys.
