@@ -372,3 +372,39 @@ class ProjectTests(utils.ClientTestCase, utils.CrudTests):
                       status_code=204)
 
         self.manager.check_tag(ref['id'], tag_name)
+
+    def test_list_project_tags_filtered(self):
+        filter_tags = 'blue,orange'
+        ref = self.new_ref()
+
+        base_url = self.TEST_URL + '/project?tags=%s' % filter_tags
+        url = self.stub_url('GET',
+                      base_url=base_url)
+        self.manager.list()
+
+    def test_list_project_tags_any_filtered(self):
+        filter_tags = 'blue,orange'
+        ref = self.new_ref()
+
+        base_url = self.TEST_URL + '/project?tags-any=%s' % filter_tags
+        url = self.stub_url('GET',
+                      base_url=base_url)
+        self.manager.list()
+
+    def test_list_project_not_tags_filtered(self):
+        filter_tags = 'blue,orange'
+        ref = self.new_ref()
+
+        base_url = self.TEST_URL + '/project?not-tags=%s' % filter_tags
+        url = self.stub_url('GET',
+                      base_url=base_url)
+        self.manager.list()
+
+    def test_list_project_not_tags_any_filtered(self):
+        filter_tags = 'blue,orange'
+        ref = self.new_ref()
+
+        base_url = self.TEST_URL + '/project?not-tags-any=%s' % filter_tags
+        url = self.stub_url('GET',
+                      base_url=base_url)
+        self.manager.list()
