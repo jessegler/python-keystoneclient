@@ -61,12 +61,12 @@ class Project(base.Resource):
         self.manager.add_tag(self.id, tag)
 
     def update_tags(self, tags):
-        #TODO: what are we returning here?
-        #TODO: update project.tags with new tags if not updated
+        # TODO(name): what are we returning here?
+        # TODO(name): update project.tags with new tags if not updated
         return self.manager.update_tags(self.id, tags)
 
     def delete_tag(self, tag):
-        #TODO: what are we returning?
+        # TODO(name): what are we returning?
         return self.manager.delete_tag(self.id, tag)
 
     def delete_all_tags(self):
