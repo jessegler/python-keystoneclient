@@ -327,10 +327,10 @@ class ProjectTests(utils.ClientTestCase, utils.CrudTests):
         ref = self.new_ref()
 
         self.stub_url("PUT",
-            parts=[self.collection_key, ref['id'], "tags"],
-            json={"tags": new_tags},
-            status_code=200)
-        
+                      parts=[self.collection_key, ref['id'], "tags"],
+                      json={"tags": new_tags},
+                      status_code=200)
+
         self.manager.update_tags(ref['id'], new_tags)
 
     def test_delete_tag(self):
@@ -338,8 +338,8 @@ class ProjectTests(utils.ClientTestCase, utils.CrudTests):
         tag_name = "blue"
 
         self.stub_url("DELETE",
-            parts=[self.collection_key, ref['id'], "tags", tag_name],
-            status_code=204)
+                      parts=[self.collection_key, ref['id'], "tags", tag_name],
+                      status_code=204)
 
         self.manager.delete_tag(ref['id'], tag_name)
 
@@ -347,9 +347,9 @@ class ProjectTests(utils.ClientTestCase, utils.CrudTests):
         ref = self.new_ref()
 
         self.stub_url("PUT",
-            parts=[self.collection_key, ref['id'], "tags"],
-            json={"tags": []},
-            status_code=200)
+                      parts=[self.collection_key, ref['id'], "tags"],
+                      json={"tags": []},
+                      status_code=200)
 
         self.manager.update_tags(ref['id'], [])
 
@@ -358,7 +358,7 @@ class ProjectTests(utils.ClientTestCase, utils.CrudTests):
         tag_name = "blue"
 
         self.stub_url("HEAD",
-            parts=[self.collection_key, ref['id'], "tags", tag_name],
-            status_code=204)
+                      parts=[self.collection_key, ref['id'], "tags", tag_name],
+                      status_code=204)
 
         self.manager.check_tag(ref['id'], tag_name)
