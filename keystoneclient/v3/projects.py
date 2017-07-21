@@ -20,6 +20,8 @@ from keystoneclient import base
 from keystoneclient import exceptions
 from keystoneclient.i18n import _
 
+from six.moves import urllib
+
 
 class Project(base.Resource):
     """Represents an Identity project.
@@ -240,17 +242,19 @@ class ProjectManager(base.CrudManager):
             project_id=base.getid(project))
 
     def add_tag(self, project_id, tag):
-        url = "/projects/%s/tags/%s" % (project_id, tag)
+        url = "/projects/%s/tags/%s" % (project_id, urllib.parse.quote(tag))
         self.client.put(url)
 
     def update_tags(self, project_id, tags):
         url = "/projects/%s/tags" % project_id
+        for tag in tags:
+            tag = urllib.parse.quote(tag)
         resp, body = self.client.put(url, body={"tags": tags})
         return body['tags']
 
     def delete_tag(self, project_id, tag):
         return self._delete(
-            "/projects/%s/tags/%s" % (project_id, tag))
+            "/projects/%s/tags/%s" % (project_id, urllib.parse.quote(tag)))
 
     def list_tags(self, project_id):
         url = "/projects/%s/tags" % project_id
@@ -258,7 +262,7 @@ class ProjectManager(base.CrudManager):
         return body['tags']
 
     def check_tag(self, project_id, tag):
-        url = "/projects/%s/tags/%s" % (project_id, tag)
+        url = "/projects/%s/tags/%s" % (project_id, urllib.parse.quote(tag))
         try:
             resp, body = self.client.head(url)
             # no errors means found the tag
