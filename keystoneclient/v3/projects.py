@@ -58,7 +58,7 @@ class Project(base.Resource):
         return retval
 
     def add_tag(self, tag):
-        return self.manager.add_tag(self.id, tag)
+        self.manager.add_tag(self.id, tag)
 
     def update_tags(self, tags):
         return self.manager.update_tags(self.id, tags)
@@ -67,7 +67,7 @@ class Project(base.Resource):
         return self.manager.delete_tag(self.id, tag)
 
     def delete_all_tags(self):
-        return self.manager.update_tags(self.id, [])
+        self.manager.update_tags(self.id, [])
 
     def list_tags(self):
         return self.manager.list_tags(self.id)
@@ -253,7 +253,7 @@ class ProjectManager(base.CrudManager):
         return body['tags']
 
     def delete_tag(self, project_id, tag):
-        return self._delete(
+        self._delete(
             "/projects/%s/tags/%s" % (project_id, urllib.parse.quote(tag)))
 
     def list_tags(self, project_id):
