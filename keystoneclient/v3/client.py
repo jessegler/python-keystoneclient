@@ -37,7 +37,6 @@ from keystoneclient.v3 import endpoint_groups
 from keystoneclient.v3 import endpoints
 from keystoneclient.v3 import groups
 from keystoneclient.v3 import policies
-from keystoneclient.v3 import project_tags
 from keystoneclient.v3 import projects
 from keystoneclient.v3 import regions
 from keystoneclient.v3 import role_assignments
@@ -240,7 +239,6 @@ class Client(httpclient.HTTPClient):
         self.tokens = tokens.TokenManager(self._adapter)
         self.trusts = trusts.TrustManager(self._adapter)
         self.users = users.UserManager(self._adapter)
-        self.project_tags = project_tags.ProjectTagManager(self._adapter)
 
         # DEPRECATED: if session is passed then we go to the new behaviour of
         # authenticating on the first required call.
