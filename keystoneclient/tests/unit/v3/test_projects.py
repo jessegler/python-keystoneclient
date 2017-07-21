@@ -353,6 +353,16 @@ class ProjectTests(utils.ClientTestCase, utils.CrudTests):
 
         self.manager.update_tags(ref['id'], [])
 
+    def test_list_tags(self):
+        ref = self.new_ref()
+
+        self.stub_url("GET",
+                      parts=[self.collection_key, ref['id'], "tags"],
+                      json={"tags": ["blue", "orange", "green"]},
+                      status_code=200)
+
+        self.manager.list_tags(ref['id'])
+
     def test_check_tag(self):
         ref = self.new_ref()
         tag_name = "blue"
