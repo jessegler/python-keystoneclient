@@ -312,3 +312,13 @@ class ProjectTests(utils.ClientTestCase, utils.CrudTests):
         # server, a different implementation might not fail this request.
         self.assertRaises(ksa_exceptions.Forbidden, self.manager.update,
                           ref['id'], **utils.parameterize(req_ref))
+
+    def test_add_tag(self):
+        ref = self.new_ref()
+        ref['tags'] = []
+        tag_name = "blue"
+
+        url = stub_url("PUT",
+            parts=[self.collection_key, ref['id'], "tags", tag_name])
+
+        self.manager.add_tag(ref['id'], tag_name)
