@@ -218,7 +218,7 @@ class ProjectsTestCase(base.V3ClientTestCase, ProjectsTestMixin):
         self.useFixture(tag_two)
 
         projects = self.client.projects.list(
-                       tags_any='%s,%s' % (tag_one, tag_two))
+            tags_any='%s,%s' % (tag_one, tag_two))
 
         # All projects are valid
         for project in projects:

@@ -363,7 +363,8 @@ class CrudManager(Manager):
                 elif 'not_tags' in param:
                     new_params[param.replace('not_', 'not-')] = params[param]
                 elif 'not_tags_any' in param:
-                    new_params[param.replace('not_tags_', 'not-tags-')] = params[param]
+                    new_params[param.replace(
+                        'not_tags_', 'not-tags-')] = params[param]
                 else:
                     new_params[param] = params[param]
             return '?%s' % urllib.parse.urlencode(new_params, doseq=True)

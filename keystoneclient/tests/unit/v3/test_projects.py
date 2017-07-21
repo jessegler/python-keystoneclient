@@ -318,10 +318,9 @@ class ProjectTests(utils.ClientTestCase, utils.CrudTests):
         tag_name = "blue"
 
         self.stub_url("PUT",
-            parts=[self.collection_key, ref['id'], "tags", tag_name],
-            status_code=201)
+                      parts=[self.collection_key, ref['id'], "tags", tag_name],
+                      status_code=201)
         self.manager.add_tag(ref['id'], tag_name)
-
 
     def test_update_tags(self):
         new_tags = ["blue", "orange"]
