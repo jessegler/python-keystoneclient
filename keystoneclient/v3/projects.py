@@ -84,7 +84,7 @@ class ProjectManager(base.CrudManager):
     @positional(3, enforcement=positional.WARN)
     def create(self, name, domain, description=None,
                enabled=True, parent=None, **kwargs):
-        """Create a project.    
+        """Create a project.
 
         :param str name: the name of the project.
         :param domain: the domain of the project.
