@@ -199,11 +199,11 @@ class ProjectsTestCase(base.V3ClientTestCase, ProjectsTestMixin):
         tag_two = fixtures.Project(self.client, self.project.id)
         self.useFixture(tag_two)
 
-        projects = self.client.projects.list(tags='%s,%s' % (tag_one, tag_two))
+        projects = self.client.projects.list(
+            tags='%s,%s' % (tag_one, tag_two))
 
         # All projects are valid
-        for project in projects:
-            self.check_project(project)
+        self.check_project(project)
 
         self.assertIn(project.entity, projects)
 
@@ -217,7 +217,8 @@ class ProjectsTestCase(base.V3ClientTestCase, ProjectsTestMixin):
         tag_two = fixtures.Project(self.client, self.project.id)
         self.useFixture(tag_two)
 
-        project = self.client.projects.list(tags_any='%s,%s' % (tag_one, tag_two))
+        projects = self.client.projects.list(
+            tags_any='%s,%s' % (tag_one, tag_two))
 
         # All projects are valid
         for project in projects:
@@ -235,7 +236,8 @@ class ProjectsTestCase(base.V3ClientTestCase, ProjectsTestMixin):
         tag_two = fixtures.Project(self.client, self.project.id)
         self.useFixture(tag_two)
 
-        project = self.client.projects.list(not_tags='%s,%s' % (tag_one, tag_two))
+        projects = self.client.projects.list(
+            not_tags='%s,%s' % (tag_one, tag_two))
 
         # All projects are valid
         for project in projects:
@@ -253,7 +255,8 @@ class ProjectsTestCase(base.V3ClientTestCase, ProjectsTestMixin):
         tag_two = fixtures.Project(self.client, self.project.id)
         self.useFixture(tag_two)
 
-        project = self.client.projects.list(not_tags_any='%s,%s' % (tag_one, tag_two))
+        projects = self.client.projects.list(
+            not_tags_any='%s,%s' % (tag_one, tag_two))
 
         # All projects are valid
         for project in projects:
