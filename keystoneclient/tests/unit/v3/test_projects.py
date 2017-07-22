@@ -375,37 +375,41 @@ class ProjectTests(utils.ClientTestCase, utils.CrudTests):
         self.manager.check_tag(ref['id'], tag_name)
 
     def test_list_project_tags_filtered(self):
-        filter_tags = 'blue,orange'
+        filter_tags = 'blue%2Corange'
         ref = self.new_ref()
 
-        base_url = self.TEST_URL + '/project?tags=%s' % filter_tags
+        base_url = self.TEST_URL + '/projects?tags=%s' % filter_tags
         url = self.stub_url('GET',
-                      base_url=base_url)
-        self.manager.list()
+                      base_url=base_url,
+                      json={"projects": [{"tags": ["blue", "orange"]}]})
+        self.manager.list(tags='blue,orange')
 
     def test_list_project_tags_any_filtered(self):
-        filter_tags = 'blue,orange'
+        filter_tags = 'blue%2Corange'
         ref = self.new_ref()
 
-        base_url = self.TEST_URL + '/project?tags-any=%s' % filter_tags
+        base_url = self.TEST_URL + '/projects?tags-any=%s' % filter_tags
         url = self.stub_url('GET',
-                      base_url=base_url)
-        self.manager.list()
+                      base_url=base_url,
+                      json={"projects": [{"tags": ["blue", "orange"]}]})
+        self.manager.list(tags_any='blue,orange')
 
     def test_list_project_not_tags_filtered(self):
-        filter_tags = 'blue,orange'
+        filter_tags = 'blue%2Corange'
         ref = self.new_ref()
 
-        base_url = self.TEST_URL + '/project?not-tags=%s' % filter_tags
+        base_url = self.TEST_URL + '/projects?not-tags=%s' % filter_tags
         url = self.stub_url('GET',
-                      base_url=base_url)
-        self.manager.list()
+                      base_url=base_url,
+                      json={"projects": [{"tags": ["blue", "orange"]}]})
+        self.manager.list(not_tags='blue,orange')
 
     def test_list_project_not_tags_any_filtered(self):
-        filter_tags = 'blue,orange'
+        filter_tags = 'blue%2Corange'
         ref = self.new_ref()
 
-        base_url = self.TEST_URL + '/project?not-tags-any=%s' % filter_tags
+        base_url = self.TEST_URL + '/projects?not-tags-any=%s' % filter_tags
         url = self.stub_url('GET',
-                      base_url=base_url)
-        self.manager.list()
+                      base_url=base_url,
+                      json={"projects": [{"tags": ["blue", "orange"]}]})
+        self.manager.list(not_tags_any='blue,orange')
